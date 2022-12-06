@@ -10,7 +10,7 @@ jobs:
       uses: instrumenta/kubeval-action@master
       #kube-score action
     - name: Checkout
-      uses: actions/checkout@v02
+      uses: actions/checkout@main
     - name: kube-score check
       uses: piraces/kube-score-ga@v0.1.3
       with:
