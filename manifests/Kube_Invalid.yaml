@@ -1,0 +1,903 @@
+apiVersion: v1
+
+kind: Pod
+
+metadata:
+
+  annotations:
+
+    sidecar.istio.io/status: '{"version":"64f53c7f7e9dca50ddb9767390392872119f042c4a541dbbb6a973d5638bd264","initContainers":["istio-init"],"containers":["istio-proxy"],"volumes":["istio-envoy","podinfo","istio-token","istiod-ca-cert"],"imagePullSecrets":null}'
+
+  creationTimestamp: "2020-07-21T10:31:37Z"
+
+  generateName: de-xyz-service-6977479b8c-
+
+  labels:
+
+    aadpodidbinding: azure-pod-xyz-binding-selector
+
+    app: de-xyz-api
+
+    name: de-xyz-service
+
+    pod-template-hash: 6977479b8c
+
+    security.istio.io/tlsMode: istio
+
+    service.istio.io/canonical-name: de-xyz-api
+
+    service.istio.io/canonical-revision: latest
+
+  name: de-xyz-service-6977479b8c-7hq69
+
+  namespace: ns-xyz-dev
+
+  ownerReferences:
+
+  - apiVersion: apps/v1
+
+    blockOwnerDeletion: true
+
+    controller: true
+
+    kind: ReplicaSet
+
+    name: de-xyz-service-6977479b8c
+
+    uid: b16120cc-2ed0-4dee-b10c-56905ac30738
+
+  resourceVersion: "2304002"
+
+  selfLink: /api/v1/namespaces/ns-xyz-dev/pods/de-xyz-service-6977479b8c-7hq69
+
+  uid: d8eb0e9e-a185-493b-802c-c4c3186ed8eb
+
+spec:
+
+  containers:
+
+  - env:
+
+    - name: ns-sb-cs
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-sb-cs
+
+          name: xyz-secrets
+
+    - name: ns-sb-topic
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-sb-topic
+
+          name: xyz-secrets
+
+    - name: ns-sb-subs
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-sb-subs
+
+          name: xyz-secrets
+
+    - name: ns-db-cs
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-db-cs
+
+          name: xyz-secrets
+
+    - name: ns-hub-cs
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-hub-cs
+
+          name: xyz-secrets
+
+    - name: ns-hub-name
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-hub-name
+
+          name: xyz-secrets
+
+    - name: ns-tw-accsid
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-tw-accsid
+
+          name: xyz-secrets
+
+    - name: ns-tw-token
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-tw-token
+
+          name: xyz-secrets
+
+    - name: ns-tw-phnno
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-tw-phnno
+
+          name: xyz-secrets
+
+    - name: ns-tw-callback
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-tw-callback
+
+          name: xyz-secrets
+
+    - name: ns-appin-instrkey
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-appin-instrkey
+
+          name: xyz-secrets
+
+    - name: ns-it-tw-accsid
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-it-tw-accsid
+
+          name: xyz-secrets
+
+    - name: ns-it-tw-token
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-it-tw-token
+
+          name: xyz-secrets
+
+    - name: ns-it-tw-phnno
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-it-tw-phnno
+
+          name: xyz-secrets
+
+    - name: ns-it-tw-calbck
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-it-tw-calbck
+
+          name: xyz-secrets
+
+    - name: ns-at-gateurl
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-at-gateurl
+
+          name: xyz-secrets
+
+    - name: ns-at-subkey
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-at-subkey
+
+          name: xyz-secrets
+
+    - name: ns-at-restapiurl
+
+      valueFrom:
+
+        secretKeyRef:
+
+          key: ns-at-restapiurl
+
+          name: xyz-secrets
+
+    image: acrdevne01.azurecr.io/anpostgts/de-notification-service:1717
+
+    imagePullPolicy: IfNotPresent
+
+    name: de-xyz-api
+
+    ports:
+
+    - containerPort: 80
+
+      name: http
+
+      protocol: TCP
+
+    resources:
+
+      limits:
+
+        cpu: 500m
+
+        memory: 512Mi
+
+      requests:
+
+        cpu: 250m
+
+        memory: 64Mi
+
+    terminationMessagePath: /dev/termination-log
+
+    terminationMessagePolicy: File
+
+    volumeMounts:
+
+    - mountPath: /mnt/secrets-store
+
+      name: secrets-store-inline
+
+      readOnly: true
+
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+
+      name: default-token-6kctm
+
+      readOnly: true
+
+  - args:
+
+    - proxy
+
+    - sidecar
+
+    - --domain
+
+    - $(POD_NAMESPACE).svc.cluster.local
+
+    - --configPath
+
+    - /etc/istio/proxy
+
+    - --binaryPath
+
+    - /usr/local/bin/envoy
+
+    - --serviceCluster
+
+    - de-xyz-api.$(POD_NAMESPACE)
+
+    - --drainDuration
+
+    - 45s
+
+    - --parentShutdownDuration
+
+    - 1m0s
+
+    - --discoveryAddress
+
+    - istiod.istio-system.svc:15012
+
+    - --zipkinAddress
+
+    - zipkin.istio-system:9411
+
+    - --proxyLogLevel=warning
+
+    - --proxyComponentLogLevel=misc:error
+
+    - --connectTimeout
+
+    - 10s
+
+    - --proxyAdminPort
+
+    - "15000"
+
+    - --concurrency
+
+    - "2"
+
+    - --controlPlaneAuthPolicy
+
+    - NONE
+
+    - --dnsRefreshRate
+
+    - 300s
+
+    - --statusPort
+
+    - "15020"
+
+    - --trust-domain=cluster.local
+
+    - --controlPlaneBootstrap=false
+
+    env:
+
+    - name: JWT_POLICY
+
+      value: third-party-jwt
+
+    - name: PILOT_CERT_PROVIDER
+
+      value: istiod
+
+    - name: CA_ADDR
+
+      value: istio-pilot.istio-system.svc:15012
+
+    - name: POD_NAME
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.name
+
+    - name: POD_NAMESPACE
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.namespace
+
+    - name: INSTANCE_IP
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: status.podIP
+
+    - name: SERVICE_ACCOUNT
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: spec.serviceAccountName
+
+    - name: HOST_IP
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: status.hostIP
+
+    - name: ISTIO_META_POD_PORTS
+
+      value: |-
+
+        [
+
+            {"name":"http","containerPort":80,"protocol":"TCP"}
+
+        ]
+
+    - name: ISTIO_META_CLUSTER_ID
+
+      value: Kubernetes
+
+    - name: ISTIO_META_POD_NAME
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.name
+
+    - name: ISTIO_META_CONFIG_NAMESPACE
+
+      valueFrom:
+
+        fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.namespace
+
+    - name: ISTIO_META_INTERCEPTION_MODE
+
+      value: REDIRECT
+
+    - name: ISTIO_META_WORKLOAD_NAME
+
+      value: de-xyz-service
+
+    - name: ISTIO_META_OWNER
+
+      value: kubernetes://apis/apps/v1/namespaces/ns-xyz-dev/deployments/de-xyz-service
+
+    - name: ISTIO_META_MESH_ID
+
+      value: cluster.local
+
+    image: docker.io/istio/proxyv2:1.5.1
+
+    imagePullPolicy: IfNotPresent
+
+    name: istio-proxy
+
+    ports:
+
+    - containerPort: 15090
+
+      name: http-envoy-prom
+
+      protocol: TCP
+
+    readinessProbe:
+
+      failureThreshold: 30
+
+      httpGet:
+
+        path: /healthz/ready
+
+        port: 15020
+
+        scheme: HTTP
+
+      initialDelaySeconds: 1
+
+      periodSeconds: 2
+
+      successThreshold: 1
+
+      timeoutSeconds: 1
+
+    resources:                # Mandetory
+
+      limits:
+
+        cpu: "2"              # Mandetory
+
+        memory: 1Gi           # Mandetory
+
+      requests:               # Mandetory
+
+        cpu: 10m              # Mandetory
+
+        memory: 40Mi          # Mandetory
+
+    securityContext:          # Mandetory
+
+      allowPrivilegeEscalation: false   # Mandetory
+
+      capabilities:                     # Mandetory
+
+        drop:                           # Mandetory
+
+        - ALL                           # Mandetory
+
+      privileged: false                 # Mandetory
+
+      readOnlyRootFilesystem: true      # Mandetory
+
+      runAsGroup: 1337                  # Mandetory
+
+      runAsNonRoot: true                # Mandetory
+
+      runAsUser: 1337                   # Mandetory
+
+    terminationMessagePath: /dev/termination-log
+
+    terminationMessagePolicy: File
+
+    volumeMounts:
+
+    - mountPath: /var/run/secrets/istio
+
+      name: istiod-ca-cert
+
+    - mountPath: /etc/istio/proxy
+
+      name: istio-envoy
+
+    - mountPath: /var/run/secrets/tokens
+
+      name: istio-token
+
+    - mountPath: /etc/istio/pod
+
+      name: podinfo
+
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+
+      name: default-token-6kctm
+
+      readOnly: true
+
+  dnsPolicy: ClusterFirst
+
+  enableServiceLinks: true
+
+  initContainers:
+
+  - command:
+
+    - istio-iptables
+
+    - -p
+
+    - "15001"
+
+    - -z
+
+    - "15006"
+
+    - -u
+
+    - "1337"
+
+    - -m
+
+    - REDIRECT
+
+    - -i
+
+    - '*'
+
+    - -x
+
+    - ""
+
+    - -b
+
+    - '*'
+
+    - -d
+
+    - 15090,15020
+
+    image: docker.io/istio/proxyv2:1.5.1
+
+    imagePullPolicy: IfNotPresent
+
+    name: istio-init
+
+    resources:
+
+      limits:
+
+        cpu: 100m
+
+        memory: 50Mi
+
+      requests:
+
+        cpu: 10m
+
+        memory: 10Mi
+
+    securityContext:                    # Mandetory
+
+      allowPrivilegeEscalation: false   # Mandetory
+
+      capabilities:                     # Mandetory
+
+        add:                            # Mandetory
+
+        - NET_ADMIN                     # Mandetory
+
+        - NET_RAW                       # Mandetory
+
+        drop:                           # Mandetory
+
+        - ALL                           # Mandetory
+
+      privileged: false                 # Mandetory
+
+      readOnlyRootFilesystem: false     # Mandetory
+
+      runAsGroup: 0                     # Mandetory
+
+      runAsNonRoot: false               # Mandetory
+
+      runAsUser: 0                      # Mandetory
+
+    terminationMessagePath: /dev/termination-log
+
+    terminationMessagePolicy: File
+
+    volumeMounts:
+
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+
+      name: default-token-6kctm
+
+      readOnly: true                    # Mandetory
+
+  nodeName: aks-aksagentpool-xyz-vms
+
+  priority: 0
+
+  restartPolicy: Always
+
+  schedulerName: default-scheduler
+
+  securityContext:
+
+    fsGroup: 1337                       # Mandetory
+
+  serviceAccount: default
+
+  serviceAccountName: default
+
+  terminationGracePeriodSeconds: 30
+
+  tolerations:
+
+  - effect: NoExecute
+
+    key: node.kubernetes.io/not-ready
+
+    operator: Exists
+
+    tolerationSeconds: 300
+
+  - effect: NoExecute
+
+    key: node.kubernetes.io/unreachable
+
+    operator: Exists
+
+    tolerationSeconds: 300
+
+  volumes:
+
+  - csi:
+
+      driver: secrets-store.csi.k8s.io
+
+      readOnly: true
+
+      volumeAttributes:
+
+        secretProviderClass: azure-xyz-kv
+
+    name: secrets-store-inline
+
+  - name: default-token-6kctm
+
+    secret:
+
+      defaultMode: 420
+
+      secretName: default-token-xyz
+
+  - emptyDir:
+
+      medium: Memory
+
+    name: istio-envoy
+
+  - downwardAPI:
+
+      defaultMode: 420
+
+      items:
+
+      - fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.labels
+
+        path: labels
+
+      - fieldRef:
+
+          apiVersion: v1
+
+          fieldPath: metadata.annotations
+
+        path: annotations
+
+    name: podinfo
+
+  - name: istio-token
+
+    projected:
+
+      defaultMode: 420
+
+      sources:
+
+      - serviceAccountToken:
+
+          audience: istio-ca
+
+          expirationSeconds: 43200
+
+          path: istio-token
+
+  - configMap:
+
+      defaultMode: 420
+
+      name: istio-ca-root-cert
+
+    name: istiod-ca-cert
+
+status:
+
+  conditions:
+
+  - lastProbeTime: null
+
+    lastTransitionTime: "2020-07-21T10:31:50Z"
+
+    status: "True"
+
+    type: Initialized
+
+  - lastProbeTime: null
+
+    lastTransitionTime: "2020-07-21T10:31:54Z"
+
+    status: "True"
+
+    type: Ready
+
+  - lastProbeTime: null
+
+    lastTransitionTime: "2020-07-21T10:31:54Z"
+
+    status: "True"
+
+    type: ContainersReady
+
+  - lastProbeTime: null
+
+    lastTransitionTime: "2020-07-21T10:31:37Z"
+
+    status: "True"
+
+    type: PodScheduled
+
+  containerStatuses:
+
+  - containerID: docker://2a9fe65ec100830a85befe1998fdb07c2c3d55a0262a9a103209153882138d39
+
+    image: acrdevne01.azurecr.io/anpostgts/de-notification-service:1717
+
+    imageID: docker-pullable://acrdevne01.azurecr.io/anpostgts/de-notification-service@sha256:ec649b33ca283ce33236fa302e3d535be666d6e3a49ec200cfd506422576de8b
+
+    lastState: {}
+
+    name: de-xyz-api
+
+    ready: true
+
+    restartCount: 0
+
+    started: true
+
+    state:
+
+      running:
+
+        startedAt: "2020-07-21T10:31:50Z"
+
+  - containerID: docker://279ec7577a3d893702165e13d9da3057e917edd5a82aa9cd1a25c0e7bc5f3494
+
+    image: istio/proxyv2:1.5.1
+
+    imageID: docker-pullable://istio/proxyv2@sha256:3ad9ee2b43b299e5e6d97aaea5ed47dbf3da9293733607d9b52f358313e852ae
+
+    lastState: {}
+
+    name: istio-proxy
+
+    ready: true
+
+    restartCount: 0
+
+    started: true
+
+    state:
+
+      running:
+
+        startedAt: "2020-07-21T10:31:50Z"
+
+  hostIP: 10.203.225.29
+
+  initContainerStatuses:
+
+  - containerID: docker://480c25ffe7b5682659ba4aebc2d2deb3ea24acbc781a3152558183f04aa4df01
+
+    image: istio/proxyv2:1.5.1
+
+    imageID: docker-pullable://istio/proxyv2@sha256:3ad9ee2b43b299e5e6d97aaea5ed47dbf3da9293733607d9b52f358313e852ae
+
+    lastState: {}
+
+    name: istio-init
+
+    ready: true
+
+    restartCount: 0
+
+    state:
+
+      terminated:
+
+        containerID: docker://480c25ffe7b5682659ba4aebc2d2deb3ea24acbc781a3152558183f04aa4df01
+
+        exitCode: 0
+
+        finishedAt: "2020-07-21T10:31:49Z"
+
+        reason: Completed
+
+        startedAt: "2020-07-21T10:31:49Z"
+
+  phase: Running
+
+  podIP: 11.11.111.11
+
+  podIPs:
+
+  - ip: 11.11.111.11
+
+  qosClass: Burstable
+
+  startTime: "2020-07-21T10:31:37Z"
