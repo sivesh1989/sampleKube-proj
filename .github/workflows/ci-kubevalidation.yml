@@ -3,9 +3,6 @@ name: kube-score CI
 on:
   push:
     branches: [ master ]
-  pull_request:
-    branches: [ master ]
-    
 jobs:
   kubeval:
     runs-on: ubuntu-latest
