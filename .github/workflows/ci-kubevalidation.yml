@@ -10,8 +10,8 @@ jobs:
       uses: instrumenta/kubeval-action@master
       #kube-score action
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@master
     - name: kube-score check
-      uses: piraces/kube-score-ga@v0.1.3
+      uses: piraces/kube-score-ga@master
       with:
         manifests-folders: './manifests/*.yml'
