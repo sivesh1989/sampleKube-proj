@@ -1,8 +1,6 @@
 name: kube-score CI
 
-on:
-  push:
-    branches: [ master ]
+on: push
 jobs:
   kubeval:
     runs-on: ubuntu-latest
