@@ -1,13 +1,15 @@
-on: push
-name: Validate
+name: kube-score CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+    
 jobs:
   kubeval:
     runs-on: ubuntu-latest
     steps:
-      #kubeval action
-    - uses: actions/checkout@master
-    - name: test
-      uses: instrumenta/kubeval-action@master
       #kube-score action
     - name: Checkout
       uses: actions/checkout@v2
